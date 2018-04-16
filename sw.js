@@ -50,9 +50,9 @@ this.addEventListener('install', function(event) {
     })
    );
 });
-this.addEventListener('active', function(event) {
+this.addEventListener('activate', function(event) {
       event.waitUntil(
-        caches.delete('bluesoft-v1');
+        caches.delete('bluesoft-v1')
       );
 });
 
