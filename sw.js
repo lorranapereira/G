@@ -14,6 +14,11 @@ var filesToCache = [
                     'imagens/icon3.png',
                     'imagens/icon4.jpg',
                     'imagens/fundo.jpg',
+                    'cadastro.html',
+                    'atendimento.html',
+                    'camisetas',
+                    'cadastro2.html'
+                    'cadastro2.html'
                     "/"
                  ];
 
