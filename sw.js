@@ -10,6 +10,16 @@ this.addEventListener('install', function(event) {
         path,
         path + 'index.html',
         path + 'css/style.css',
+        path + 'imagens/logo.ico',
+        path + 'imagens/fundo1.png',
+        path + 'imagens/fundo2.jpg',
+        path + 'imagens/fundo3.png',
+        path + 'imagens/icon1.png',
+        path + 'imagens/icon2.png',
+        path + 'imagens/icon3.png',
+        path + 'imagens/icon4.jpg',
+        path + 'imagens/fundo.jpg'
+
       ])
     })
   );
@@ -46,6 +56,16 @@ this.addEventListener('install', function(event) {
         path,
         path + 'index.html',
         path + 'css/style.css',
+        path + 'imagens/logo.ico',
+        path + 'imagens/fundo1.png',
+        path + 'imagens/fundo2.jpg',
+        path + 'imagens/fundo3.png',
+        path + 'imagens/icon1.png',
+        path + 'imagens/icon2.png',
+        path + 'imagens/icon3.png',
+        path + 'imagens/icon4.jpg',
+        path + 'imagens/fundo.jpg'
+
       ]);
     })
    );
