@@ -1,42 +1,72 @@
+var log = console.log.bind(console);//bind our console to a variable
+var version = "0.0.2";
+var cacheName = "sw-demo";
+var cache = cacheName + "-" + version;
+var filesToCache = [
+                    'index.html',
+                    'css/style.css',
+                    'imagens/logo.ico',
+                    'imagens/fundo1.png',
+                    'imagens/fundo2.jpg',
+                    'imagens/fundo3.png',
+                    'imagens/icon1.png',
+                    'imagens/icon2.png',
+                    'imagens/icon3.png',
+                    'imagens/icon4.jpg',
+                    'imagens/fundo.jpg'
+                    "/",//Note that this is different from below 
+                    "/?app=true"//This is different from above in request object's terminology
+                 ];
 
-//Install stage sets up the offline page in the cahche and opens a new cache
-var CACHE_NAME = 'static-v1';
-    self.addEventListener('install', function (event) {
-        event.waitUntil(
-        caches.open(CACHE_NAME).then(function (cache) {
-            return cache.addAll([
-                '/',
-                '/index.html',
-                '/css/style.css',
-                '/manifest.js'
-            ])
-        })
-    )
-})
-
-self.addEventListener('activate', function activator(event) {
-    event.waitUntil(
-        caches.keys().then(function (keys) {
-            return Promise.all(keys
-            .filter(function (key) {
-            return key.indexOf(CACHE_NAME) !== 0;
-            })
-            .map(function (key) {
-            return caches.delete(key);
-            })
-            );
-        })
-    );
-})
-self.addEventListener('fetch', function (event) {
-    event.respondWith(
-        caches.match(event.request).then(function (cachedResponse) {
-        return cachedResponse || fetch(event.request);
-        })
-    );
+//Add event listener for install
+self.addEventListener("install", function(event) {
+    log('[ServiceWorker] Installing....');
+    event.waitUntil(caches
+                        .open(cache)//open this cache from caches and it will return a Promise
+                        .then(function(cache) { //catch that promise
+                            log('[ServiceWorker] Caching files');
+                            cache.addAll(filesToCache);//add all required files to cache it also returns a Promise
+                        })
+                    ); 
 });
 
+//Add event listener for fetch
+self.addEventListener("fetch", function(event) {
+    //note that event.request.url gives URL of the request so you could also intercept the request and send a response based on your URL
+    //e.g. you make want to send gif if anything in jpeg form is requested.
+    event.respondWith(//it either takes a Response object as a parameter or a promise that resolves to a Response object
+                        caches.match(event.request)//If there is a match in the cache of this request object
+                            .then(function(response) {
+                                if(response) {
+                                    log("Fulfilling "+event.request.url+" from cache.");
+                                    //returning response object
+                                    return response;
+                                } else {
+                                    log(event.request.url+" not found in cache fetching from network.");
+                                    //return promise that resolves to Response object
+                                    return fetch(event.request);
+                                }
+                            })
+                    );
+});
 
+self.addEventListener('activate', function(event) {
+  log('[ServiceWorker] Activate');
+  event.waitUntil(
+                    caches.keys()//it will return all the keys in the cache as an array
+                    .then(function(keyList) {
+                            //run everything in parallel using Promise.all()
+                            Promise.all(keyList.map(function(key) {
+                                    if (key !== cacheName) {
+                                        log('[ServiceWorker] Removing old cache ', key);
+                                        //if key doesn`t matches with present key
+                                        return caches.delete(key);
+                                    }
+                                })
+                            );
+                        })
+                );
+});
 
  
   
