@@ -1,33 +1,41 @@
 //This is the "Offline page" service worker
 
-//Install stage sets up the offline page in the cahche and opens a new cache
+var path = '/',
+    CACHE NAME = 'bluesoft-v1';
+
 this.addEventListener('install', function(event) {
   event.waitUntil(
-    caches.open('v1').then(function(cache) {
+    caches.open('CACHE_NAME').then(function(cache) {
       return cache.addAll([
-        '/',
-        '/index.html',
-        '/css/style.css',
+        path,
+        path + 'index.html',
+        path + 'css/style.css',
+      ])
     })
   );
 });
 
 //If any fetch fails, it will show the offline page.
 //Maybe this should be limited to HTML documents?
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    fetch(event.request).catch(function(error) {
-        console.error( '[PWA Builder] Network request Failed. Serving offline page ' + error );
-        return caches.open('pwabuilder-offline').then(function(cache) {
-          return cache.match('offline.html');
-      });
-    }));
-});
-
-//This is a event that can be fired from your page to tell the SW to update the offline page
-self.addEventListener('refreshOffline', function(response) {
-  return caches.open('pwabuilder-offline').then(function(cache) {
-    console.log('[PWA Builder] Offline page updated from refreshOffline event: '+ response.url);
-    return cache.put(offlinePage, response);
-  });
+addEventListener('fetch', function (event) {
+  var response;
+  event.respondWith(caches.match(event.request)
+    .then(function(r) {
+       response = r;
+       if(!response){
+          throw "Não tem no cache";
+       }
+       caches.open(CACHE_NAME).then(function(cache) {
+          cache.put(event.request, response);
+       });
+       return response.clone();
+        }).cache(function() {
+          return fetch(event.request).then(function(res){
+            return res.clone();
+          }, function(err);
+             return caches.match(path + 'nao-disponivel.html')
+          });
+      })
+   );
+   
 });
