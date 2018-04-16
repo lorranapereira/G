@@ -13,9 +13,8 @@ var filesToCache = [
                     'imagens/icon2.png',
                     'imagens/icon3.png',
                     'imagens/icon4.jpg',
-                    'imagens/fundo.jpg'
-                    "/",//Note that this is different from below 
-                    "/?app=true"//This is different from above in request object's terminology
+                    'imagens/fundo.jpg',
+                    "/"
                  ];
 
 //Add event listener for install
