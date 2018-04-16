@@ -7,9 +7,8 @@ var CACHE_NAME = 'static-v1';
             return cache.addAll([
                 '/',
                 '/index.html',
-                '/style.css',
-                '/manifest.js',
-                '/vendor.js'
+                '/css/style.css',
+                '/manifest.js'
             ])
         })
     )
