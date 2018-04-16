@@ -1,7 +1,7 @@
 //This is the "Offline page" service worker
 
 var path = '/',
-    CACHE NAME = 'bluesoft-v1';
+    CACHE_NAME = 'bluesoft-v1';
 
 this.addEventListener('install', function(event) {
   event.waitUntil(
@@ -37,5 +37,24 @@ addEventListener('fetch', function (event) {
           });
       })
    );
-   
 });
+
+this.addEventListener('install', function(event) {
+  event.waitUntil(
+    caches.open('bluesoft-v2').then(function(cache) {
+      return cache.addAll([
+        path,
+        path + 'index.html',
+        path + 'css/style.css',
+      ]);
+    })
+   );
+});
+this.addEventListener('active', function(event) {
+      event.waitUntil(
+        caches.delete('bluesoft-v1');
+      );
+});
+
+
+     
