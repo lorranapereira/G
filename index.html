@@ -147,16 +147,15 @@
         <!-- /.container -->
     </footer>
     <script>
-        if ('serviceWorker' in navigator) {
-          // Registra um service worker hospeadado na raiz do
-          // site usando o escopo padrão
-          navigator.serviceWorker.register('/sw.js').then(function(registration) {
-            console.log('Service worker  registrado com sucesso:', registration);
-          }).catch(function(error) {
-            console.log('Falha ao Registrar o Service Worker:', error);
-          });
+        if (navigator.serviceWorker.controller) {
+        console.log('[PWA Builder] active service worker found, no need to register')
         } else {
-          console.log('Service workers não suportado!');
+        //Register the ServiceWorker
+        navigator.serviceWorker.register('sw.js', {
+            scope: './'
+        }).then(function(reg) {
+            console.log('Service worker has been registered for scope:'+ reg.scope);
+        });
         }
 
     </script>
