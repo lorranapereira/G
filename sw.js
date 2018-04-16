@@ -32,7 +32,7 @@ addEventListener('fetch', function (event) {
         }).cache(function() {
           return fetch(event.request).then(function(res){
             return res.clone();
-          }, function(err);
+          }, function(err){
              return caches.match(path + 'nao-disponivel.html')
           });
       })
