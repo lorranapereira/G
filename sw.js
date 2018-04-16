@@ -1,80 +1,39 @@
-//This is the "Offline page" service worker
 
-var path = '/',
-    CACHE_NAME = 'bluesoft-v1';
-
-this.addEventListener('install', function(event) {
+//Install stage sets up the offline page in the cahche and opens a new cache
+self.addEventListener('install', function(event) {
+  var offlinePage = new Request('offline.html');
   event.waitUntil(
-    caches.open('CACHE_NAME').then(function(cache) {
-      return cache.addAll([
-        path,
-        path + 'index.html',
-        path + 'css/style.css',
-        path + 'imagens/logo.ico',
-        path + 'imagens/fundo1.png',
-        path + 'imagens/fundo2.jpg',
-        path + 'imagens/fundo3.png',
-        path + 'imagens/icon1.png',
-        path + 'imagens/icon2.png',
-        path + 'imagens/icon3.png',
-        path + 'imagens/icon4.jpg',
-        path + 'imagens/fundo.jpg'
-
-      ])
-    })
-  );
+  fetch(offlinePage).then(function(response) {
+    return caches.open('pwabuilder-offline').then(function(cache) {
+      console.log('[PWA Builder] Cached offline page during Install'+ response.url);
+      return cache.put(offlinePage, response);
+    });
+  }));
 });
 
 //If any fetch fails, it will show the offline page.
 //Maybe this should be limited to HTML documents?
-addEventListener('fetch', function (event) {
-  var response;
-  event.respondWith(caches.match(event.request)
-    .then(function(r) {
-       response = r;
-       if(!response){
-          throw "Não tem no cache";
-       }
-       caches.open(CACHE_NAME).then(function(cache) {
-          cache.put(event.request, response);
-       });
-       return response.clone();
-        }).cache(function() {
-          return fetch(event.request).then(function(res){
-            return res.clone();
-          }, function(err){
-             return caches.match(path + 'nao-disponivel.html')
-          });
-      })
-   );
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    fetch(event.request).catch(function(error) {
+        console.error( '[PWA Builder] Network request Failed. Serving offline page ' + error );
+        return caches.open('pwabuilder-offline').then(function(cache) {
+          return cache.match('offline.html');
+      });
+    }));
 });
 
-this.addEventListener('install', function(event) {
-  event.waitUntil(
-    caches.open('bluesoft-v2').then(function(cache) {
-      return cache.addAll([
-        path,
-        path + 'index.html',
-        path + 'css/style.css',
-        path + 'imagens/logo.ico',
-        path + 'imagens/fundo1.png',
-        path + 'imagens/fundo2.jpg',
-        path + 'imagens/fundo3.png',
-        path + 'imagens/icon1.png',
-        path + 'imagens/icon2.png',
-        path + 'imagens/icon3.png',
-        path + 'imagens/icon4.jpg',
-        path + 'imagens/fundo.jpg'
-
-      ]);
-    })
-   );
-});
-this.addEventListener('activate', function(event) {
-      event.waitUntil(
-        caches.delete('bluesoft-v1')
-      );
+//This is a event that can be fired from your page to tell the SW to update the offline page
+self.addEventListener('refreshOffline', function(response) {
+  return caches.open('pwabuilder-offline').then(function(cache) {
+    console.log('[PWA Builder] Offline page updated from refreshOffline event: '+ response.url);
+    return cache.put(offlinePage, response);
+  });
 });
 
+
+
+ 
+  
 
      
