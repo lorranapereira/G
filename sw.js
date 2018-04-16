@@ -17,8 +17,8 @@ var filesToCache = [
                     'cadastro.html',
                     'atendimento.html',
                     'camisetas',
-                    'cadastro2.html'
-                    'cadastro2.html'
+                    'cadastro2.html',
+                    'cadastro3.html',
                     "/"
                  ];
 
