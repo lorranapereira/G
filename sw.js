@@ -1,8 +1,6 @@
-var log = console.log.bind(console);//bind our console to a variable
-var version = "0.0.2";
-var cacheName = "sw-demo";
-var cache = cacheName + "-" + version;
-var filesToCache = [
+var CACHE_NAME = 'my-site-cache-v1';
+var urlsToCache = [
+                    '/',
                     'index.html',
                     'css/style.css',
                     'imagens/logo.ico',
@@ -87,60 +85,75 @@ var filesToCache = [
                     'imagens/shounen4.jpg',	
                     'imagens/shounen5.jpg',	
                     'imagens/shounen6.jpg',	
-                    'imagens/stranger.jpg',
-                    "/"
-                 ];
+                    'imagens/stranger.jpg'
+];
 
-//Add event listener for install
-self.addEventListener("install", function(event) {
-    log('[ServiceWorker] Installing....');
-    event.waitUntil(caches
-                        .open(cache)//open this cache from caches and it will return a Promise
-                        .then(function(cache) { //catch that promise
-                            log('[ServiceWorker] Caching files');
-                            cache.addAll(filesToCache);//add all required files to cache it also returns a Promise
-                        })
-                    ); 
+self.addEventListener('install', function(event) {
+  // Perform install steps
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(function(cache) {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
+  );
 });
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
 
-//Add event listener for fetch
-self.addEventListener("fetch", function(event) {
-    //note that event.request.url gives URL of the request so you could also intercept the request and send a response based on your URL
-    //e.g. you make want to send gif if anything in jpeg form is requested.
-    event.respondWith(//it either takes a Response object as a parameter or a promise that resolves to a Response object
-                        caches.match(event.request)//If there is a match in the cache of this request object
-                            .then(function(response) {
-                                if(response) {
-                                    log("Fulfilling "+event.request.url+" from cache.");
-                                    //returning response object
-                                    return response;
-                                } else {
-                                    log(event.request.url+" not found in cache fetching from network.");
-                                    //return promise that resolves to Response object
-                                    return fetch(event.request);
-                                }
-                            })
-                    );
+        // IMPORTANT: Clone the request. A request is a stream and
+        // can only be consumed once. Since we are consuming this
+        // once by cache and once by the browser for fetch, we need
+        // to clone the response.
+        var fetchRequest = event.request.clone();
+
+        return fetch(fetchRequest).then(
+          function(response) {
+            // Check if we received a valid response
+            if(!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // IMPORTANT: Clone the response. A response is a stream
+            // and because we want the browser to consume the response
+            // as well as the cache consuming the response, we need
+            // to clone it so we have two streams.
+            var responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then(function(cache) {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          }
+        );
+      })
+    );
 });
 
 self.addEventListener('activate', function(event) {
-  log('[ServiceWorker] Activate');
-  event.waitUntil(
-                    caches.keys()//it will return all the keys in the cache as an array
-                    .then(function(keyList) {
-                            //run everything in parallel using Promise.all()
-                            Promise.all(keyList.map(function(key) {
-                                    if (key !== cacheName) {
-                                        log('[ServiceWorker] Removing old cache ', key);
-                                        //if key doesn`t matches with present key
-                                        return caches.delete(key);
-                                    }
-                                })
-                            );
-                        })
-                );
-});
 
+  var cacheWhitelist = ['pages-cache-v1', 'blog-posts-cache-v1'];
+
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
  
   
 
