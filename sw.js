@@ -8,7 +8,7 @@ var filesToCache = [
                     'css/style.css',
                     'imagens/logo.ico',
                     'imagens/fundo1.png',
-                    'imagens/fundo2.jpg',
+                    'imagens/fundo2.png',
                     'imagens/fundo3.png',
                     'imagens/icon1.png',
                     'imagens/icon2.png',
