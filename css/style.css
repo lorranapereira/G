@@ -82,9 +82,6 @@ font-size: 140%;
 font-family: 'Pacifico', cursive;    
 font-family: 'Satisfy', cursive;    
 }
-body {
-    background-image: url('imagens/fundo.jpg');
-}
 .buttonCenter{
     position: relative;
     top:3em;
