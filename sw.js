@@ -19,20 +19,20 @@ var filesToCache = [
                     'camisetas.html',
                     'cadastro2.html',
                     'cadastro3.html',
-                    'ajax-loader.gif'	
-                    'config.rb'	
-                    'slick-theme.css'	
-                    'slick-theme.less'	
-                    'slick-theme.scss'	
-                    'slick.css'	
-                    'slick.js'	
-                    'slick.less'	
-                    'slick.min.js'	
-                    'slick.scss'
-                    'fonts/slick.eot',	
-                    'fonts/slick.svg',	
-                    'fonts/slick.ttf',	
-                    'fonts/slick.woff',	
+                    'slick/ajax-loader.gif',	
+                    'slick/config.rb',	
+                    'slick/slick-theme.css',	
+                    'slick/slick-theme.less',	
+                    'slick/slick-theme.scss',	
+                    'slick/slick.css',	
+                    'slick/slick.js',	
+                    'slick/slick.less',	
+                    'slick/slick.min.js',	
+                    'slick/slick.scss',
+                    'slick/fonts/slick.eot',	
+                    'slick/fonts/slick.svg',	
+                    'slick/fonts/slick.ttf',	
+                    'slick/fonts/slick.woff',	
                     'OutrosLivros.html',
                     'mangas.html',
                     'MeusPedidos.html',
