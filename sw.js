@@ -1,7 +1,6 @@
 var CACHE_NAME = 'WELFORDIAN-CACHE-V2';
 var urlsToCache = [
                     'css/style.css',
-                    'imagens/fundo.jpg',
                     'index.html',
                     'imagens/logo.ico',
                     'imagens/fundo1.png',
