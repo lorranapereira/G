@@ -1,7 +1,11 @@
-var CACHE_NAME = 'WELFORDIAN-CACHE-V2';
-var urlsToCache = [
-                    'css/style.css',
+var log = console.log.bind(console);//bind our console to a variable
+var version = "0.0.2";
+var cacheName = "sw-demo";
+var cache = cacheName + "-" + version;
+var filesToCache = [
+                    '/',
                     'index.html',
+                    'css/style.css',
                     'imagens/logo.ico',
                     'imagens/fundo1.png',
                     'imagens/fundo2.jpg',
@@ -83,67 +87,55 @@ var urlsToCache = [
                     'imagens/shounen4.jpg',	
                     'imagens/shounen5.jpg',	
                     'imagens/shounen6.jpg',	
-                    'imagens/stranger.jpg',
-                    '/'
-];
+                    'imagens/stranger.jpg'
+                 ];
 
-self.addEventListener('install', function(event) {
-  // Perform install steps
+//Add event listener for install
+self.addEventListener("install", function(event) {
+    log('[ServiceWorker] Installing....');
+    event.waitUntil(caches
+                        .open(cache)//open this cache from caches and it will return a Promise
+                        .then(function(cache) { //catch that promise
+                            log('[ServiceWorker] Caching files');
+                            cache.addAll(filesToCache);//add all required files to cache it also returns a Promise
+                        })
+                    ); 
+});
+
+//Add event listener for fetch
+self.addEventListener("fetch", function(event) {
+    //note that event.request.url gives URL of the request so you could also intercept the request and send a response based on your URL
+    //e.g. you make want to send gif if anything in jpeg form is requested.
+    event.respondWith(//it either takes a Response object as a parameter or a promise that resolves to a Response object
+                        caches.match(event.request)//If there is a match in the cache of this request object
+                            .then(function(response) {
+                                if(response) {
+                                    log("Fulfilling "+event.request.url+" from cache.");
+                                    //returning response object
+                                    return response;
+                                } else {
+                                    log(event.request.url+" not found in cache fetching from network.");
+                                    //return promise that resolves to Response object
+                                    return fetch(event.request);
+                                }
+                            })
+                    );
+});
+
+self.addEventListener('activate', function(event) {
+  log('[ServiceWorker] Activate');
   event.waitUntil(
-    caches.open(CACHE_NAME)
-    .then(function(cache) {
-      console.log('Opened cache');
-      return cache.addAll(urlsToCache);
-    })
-  );
+                    caches.keys()//it will return all the keys in the cache as an array
+                    .then(function(keyList) {
+                            //run everything in parallel using Promise.all()
+                            Promise.all(keyList.map(function(key) {
+                                    if (key !== cacheName) {
+                                        log('[ServiceWorker] Removing old cache ', key);
+                                        //if key doesn`t matches with present key
+                                        return caches.delete(key);
+                                    }
+                                })
+                            );
+                        })
+                );
 });
-
-self.addEventListener('fetch', function(event) {
-  var reqURL = new URL(event.request.url);
-  if (/lst.fm/.test(reqURL)) {
-    event.respondWith(lastFMImageResponse(event.request));
-  } else {
-    event.respondWith(
-      caches.match(event.request).then(function(response) {
-        if (response) {
-          return response;
-        }
-
-        var fetchRequest = event.request.clone();
-
-        return fetch(fetchRequest).then(
-          function(response) {
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-            var responseToCache = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then(function(cache) {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
-          }
-        );
-      }).catch(function(err) {
-        return err;
-      })
-    );
-  }
-});
-
-function lastFMImageResponse(request) {
-  return caches.match(request).then(function(response) {
-    if (response) {
-      return response;
-    }
-    return fetch(request).then(function(response) {
-      caches.open('lfm-images').then(function(cache) {
-        cache.put(request, response);
-      });
-
-      return response.clone();
-    });
-  });
-}
