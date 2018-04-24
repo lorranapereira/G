@@ -20,6 +20,7 @@ var filesToCache = [
                     'imagens/icon2.png',
                     'imagens/icon3.png',
                     'imagens/icon4.jpg',
+                    'feminina.html',
                     'cadastro.html',
                     'atendimento.html',
                     'camisetas.html',
