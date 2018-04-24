@@ -9,7 +9,6 @@
     <meta name="author" content="">
 
     <title>GeekSul</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
@@ -70,20 +69,48 @@
         <a href="index.html" class="logo"><img src="imagens/logo.ico"  style="position:absolute;left:50%;width:10%;top:1em;height:40%" alt="">
         </a>
     </nav>
-    <div class="container">            
-        <div class="col-lg-9">
-
-            <div id="carouselExampleIndicators" style="position:relative; left:-10%; top:-1.8em; width:120%;" class="carousel slide my-4" data-ride="carousel">
-                <ol class="carousel-indicators">
-                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                </ol>
+        <header>
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+          <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+          </ol>
+          <div class="carousel-inner" role="listbox">
+            <!-- Slide One - Set the background image for this slide in the line below -->
+            <div class="carousel-item active" style="background-image: url('imagens/fund1.png')">
+              <div class="carousel-caption d-none d-md-block">
+                <h3>First Slide</h3>
+                <p>This is a description for the first slide.</p>
+              </div>
             </div>
+            <!-- Slide Two - Set the background image for this slide in the line below -->
+            <div class="carousel-item" style="background-image: url('imagens/fund2.jpg')">
+              <div class="carousel-caption d-none d-md-block">
+                <h3>Second Slide</h3>
+                <p>This is a description for the second slide.</p>
+              </div>
+            </div>
+            <!-- Slide Three - Set the background image for this slide in the line below -->
+            <div class="carousel-item" style="background-image: url('imagens/fund3.jpg')">
+              <div class="carousel-caption d-none d-md-block">
+                <h3>Third Slide</h3>
+                <p>This is a description for the third slide.</p>
+              </div>
+            </div>
+          </div>
+          <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
         </div>
-        <h1><strong class="center" style="position:relative; left:7%; font-size:75%;">  &nbsp &nbsp &nbsp GeekSul <br/> Conheça nossa loja</strong></h1>
-        <br/>
-        <br/>
+      </header>
+
+    <div class="container">            
         <br/>
         <br/>
         <div style="position:relative; display:inline-flex; left:3%">
